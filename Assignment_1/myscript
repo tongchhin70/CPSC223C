@@ -11,9 +11,6 @@ rm *.o
 rm *.out
 
 echo "Compile the C main function chemistry.c according to C standard of year 2020"
-#The author has search for a new standard for C and has not found anything newer
-#than year 2017.  If a new standard becomes available then it is a wise move to
-#modify the compile statement below to reflect the newest stanadard.
 gcc -c -Wall -std=c2x -o chemistry.o -m64 -no-pie -fno-pie chemistry.c
 
 echo "Link object files"
