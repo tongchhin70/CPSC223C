@@ -31,18 +31,18 @@ int main(){
     char name[30];
     char title[30];
 
-    // printf("\nWelcome to Modern Chemistry brought to by Chief Software Engineer Tong Chhin");
-    // printf("\nThe time is now: %s\n", display_time);
+    printf("\nWelcome to Modern Chemistry brought to by Chief Software Engineer Tong Chhin");
+    printf("\nThe time is now: %s\n", display_time);
 
-    // printf("\nPlease Enter Your Name:");
-    // fgets(name, 30, stdin);
-    // name[strcspn(name, "\n")] = 0; //removes new line by fgets
+    printf("\nPlease Enter Your Name:");
+    fgets(name, 30, stdin);
+    name[strcspn(name, "\n")] = 0; //removes new line by fgets
 
-    // printf("\nPlease enter your title: (Director, Sargent, Ms, Chief, Engineer, Fishmonger, etc):");
-    // fgets(title, 30, stdin);
-    // title[strcspn(title, "\n")] = 0; //removes new line by fgets
+    printf("\nPlease enter your title: (Director, Sargent, Ms, Chief, Engineer, Fishmonger, etc):");
+    fgets(title, 30, stdin);
+    title[strcspn(title, "\n")] = 0; //removes new line by fgets
 
-    // printf("Thank you %s %s", title, name);
+    printf("Thank you %s %s", title, name);
 
     printf("\nPlease enter the volume (ml) of the liquid in beaker #1:");
     scanf("%f", &vol1);
