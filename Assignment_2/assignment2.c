@@ -1,3 +1,6 @@
+
+
+//============= Begin source code ===============
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,7 +23,6 @@ int main(){
     printf("\nWelcome to Data String brought to by Chief Software Engineer Tong Chhin");
     printf("\nThe time is now: %s\n", display_time);
 
-    
     FILE* fptr; //init file
     char *filename;//create file name 
     char *string;
@@ -55,43 +57,81 @@ int main(){
 
     // Moving pointer to end
     fseek(fptr, 0, SEEK_END);
-
+    // Records the size 
     fsize = ftell(fptr);
-
+    // Moving it back to the start
     fseek(fptr, 0, SEEK_SET); 
 
     // Printing position of pointer
-    printf("\n\nThe file size is %ld bytes\n", fsize);
+    printf("\n\nThe file size has %ld chars\n", fsize);
 
-    string = malloc(sizeof(char)*(fsize+1));
-    int i = 0;
+    string = malloc(sizeof(char)*(fsize+1)); // Using Malloc to allocate memory, + 1 to make room for NULL
+    int i = 0; // Init an Index
 
     while ((c = fgetc(fptr)) != EOF) {
-        string[i] = c;
-        i++;
+        string[i] = c; // Adds a char to into string array
+        i++; // Moves the index to the next char
     }
 
-    string[i] = '\0';
-    fclose(fptr);
-    
+    string[i] = '\0'; // Add NULL to the end of the string array
+    fclose(fptr); // Close the file
+
+    free(fptr); // Free up memory
+
+    printf("\nFile has copied to a one-dimensional array.\n"); // Finished copying the contents
+
     // printf("\nFile Contents:\n\n%s\n", string);
 
-
-    //print 256 characters
-
-    printf("\nFile Contents to max of 256 characters:\n\n");
-    i = 0;
-    while (i != 256 ){
-        if (i % 64 != 0){
+    // Print 256 characters
+    printf("\nFile Contents to max of 256 characters:\n");
+    i = 0; // Index starting at 0
+    while (i != 256 ){ // Adds a while loop to restrict char to loop 256 times
+        if (i % 64 != 0){ // Condition with modulo to add a new line for every 64 char
             printf("%c", string[i]);
-            i++;
+            i++; // Increment 
         } else {
-            printf("\n");
+            printf("\n"); // New line added
             printf("%c", string[i]);
-            i++;
+            i++; // Increment 
         }
     }
 
+
+    char *search = malloc( sizeof(char)* 12);
+    if (search == NULL) {
+        printf("Memory allocation failed!\n");
+        return 1;
+    }
+    printf("\nEnter a String to Search: ");
+    fgets(search, 12, stdin);
+    search[strcspn(search, "\n")] = '\0';  // Remove newline character
     
+    int *arraysearch = malloc(sizeof(int)*10);
+    i = 0;
+    int pos;
+    int flag = 1;
+
+    char *result;
+    char *stringcopy = string;
+
+    while (flag != 0){
+        result = strstr(stringcopy, search);
+        if (result != NULL) {
+            stringcopy = result + strlen(search);
+            arraysearch[i] = result - string;
+            i++;
+        } else {
+            flag = 0;
+        }
+    }
+
+    printf("Substring found at positions: ");
+    for (int j = 0; j < i; j++) {
+        printf("%d ", arraysearch[j]);
+    }
+    printf("\n");
+
+
+
     return 0;
 }
