@@ -58,11 +58,10 @@ int main(){
 
     fsize = ftell(fptr);
 
-    // SET POINTER BACK TO THE ORIGINAL POSITION!!!!
     fseek(fptr, 0, SEEK_SET); 
 
     // Printing position of pointer
-    printf("\n\nThe file size is %ld bytes", fsize);
+    printf("\n\nThe file size is %ld bytes\n", fsize);
 
     string = malloc(sizeof(char)*(fsize+1));
     int i = 0;
@@ -74,8 +73,24 @@ int main(){
 
     string[i] = '\0';
     fclose(fptr);
+    
+    // printf("\nFile Contents:\n\n%s\n", string);
 
-    printf("\nFile Contents:\n\n%s\n\n", string);
+
+    //print 256 characters
+
+    printf("\nFile Contents to max of 256 characters:\n\n");
+    i = 0;
+    while (i != 256 ){
+        if (i % 64 != 0){
+            printf("%c", string[i]);
+            i++;
+        } else {
+            printf("\n");
+            printf("%c", string[i]);
+            i++;
+        }
+    }
 
     
     return 0;
