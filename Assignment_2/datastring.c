@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#define MAX_CHAR_SIZE 256
+#define MAX_CHAR_LINE 64
 
 int main(){
 
@@ -85,7 +87,8 @@ int main(){
     // Print 256 characters
     printf("\nFile Contents to max of 256 characters:\n");
     i = 0; // Index starting at 0
-    while (i != 256 ){ // Adds a while loop to restrict char to loop 256 times
+
+    while (i != MAX_CHAR_SIZE ){ // Adds a while loop to restrict char to loop 256 times
         if (i % 64 != 0){ // Condition with modulo to add a new line for every 64 char
             printf("%c", string[i]);
             i++; // Increment 
@@ -97,39 +100,59 @@ int main(){
     }
 
 
-    char *search = malloc( sizeof(char)* 12);
+    char *search = malloc(sizeof(char)* 12);
+    char *result;
+    char *stringcopy = string;
+
     if (search == NULL) {
         printf("Memory allocation failed!\n");
         return 1;
     }
-    printf("\nEnter a String to Search: ");
-    fgets(search, 12, stdin);
-    search[strcspn(search, "\n")] = '\0';  // Remove newline character
-    
-    int *arraysearch = malloc(sizeof(int)*10);
-    i = 0;
-    int pos;
-    int flag = 1;
 
-    char *result;
-    char *stringcopy = string;
+    while (1) {
 
-    while (flag != 0){
-        result = strstr(stringcopy, search);
-        if (result != NULL) {
+        i = 0;
+        int *arraysearch = malloc(sizeof(int)*10);
+        char *result;
+        char *stringcopy = string;
+
+        printf("\n\nEnter a String to Search (Enter quit to close out the program): ");
+        fgets(search, 12, stdin);
+        search[strcspn(search, "\n")] = '\0';  // Remove newline character
+
+        if (strcmp(search, "quit") == 0){
+            printf("Goodbye!\n");
+            break;  // Exit the loop
+        }
+
+        while ((result = strstr(stringcopy, search)) != NULL){
             stringcopy = result + strlen(search);
             arraysearch[i] = result - string;
             i++;
-        } else {
-            flag = 0;
         }
+    
+        if (strstr(string, search) != NULL){
+            printf("Substring found at positions: ");
+            for (int j = 0; j < i; j++) {
+                printf("%d ", arraysearch[j]);
+            }
+            printf("\n");
+        } else {
+            printf("Position Not Found!");
+    
+        }
+
+        //free up memory
+        free(arraysearch);
     }
 
-    printf("Substring found at positions: ");
-    for (int j = 0; j < i; j++) {
-        printf("%d ", arraysearch[j]);
-    }
-    printf("\n");
+    free(search);
+
+    // printf("Substring found at positions: ");
+    // for (int j = 0; j < i; j++) {
+    //     printf("%d ", arraysearch[j]);
+    // }
+    // printf("\n");
 
 
 

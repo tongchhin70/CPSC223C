@@ -1,3 +1,0 @@
-    while(i =! NULL){
-
-    }
