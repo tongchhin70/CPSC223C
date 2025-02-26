@@ -7,11 +7,12 @@
 
 
 echo "Remove un-needed files, if any exist."
-rm *.o
-rm *.out
+rm -f *.o
+rm -f *.out
 
-echo "Compile the C main function chemistry.c according to C standard of year 2020"
+echo "Compiling the C program datastring.c according to C standard of year 2020"
 gcc -c -Wall -std=c2x -o datastring.o -m64 -no-pie -fno-pie datastring.c
+
 
 if [ $? -ne 0 ]; then
     echo "Compilation failed."
@@ -19,7 +20,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Link object files"
-gcc -m64 -std=c2x datastring.o -fno-pie -no-pie -o runprogram.out
+gcc -m64 datastring.o -fno-pie -no-pie -o runprogram.out
 
 if [ $? -ne 0 ]; then
     echo "Linking failed."
