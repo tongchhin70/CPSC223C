@@ -1,3 +1,16 @@
+//Author: Tong Chhin
+//Author email: tongchhin@csu.fullerton.edu
+//Program name: Chemistry Program
+//Programming languages: One file in C language and two files in Bash.
+//Date program began: 2025-Feb-16
+//Date of last update: 2025-Feb-25
+//Files in this program: datastring and r.sh.  
+//Status: Ready to be submitted
+
+//Purpose of this program:
+// Purpose: This program reads a text file, stores its contents in memory, allows the user to search for a string,
+// and displays the occurrences of that string within the file.
+
 //============= Begin source code ===============
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,17 +71,17 @@ int main(){
     string = malloc(sizeof(char)*(fsize+1)); // Using Malloc to allocate memory, + 1 to make room for NULL
     int i = 0; // Init an Index
 
-    while ((c = fgetc(fptr)) != EOF) {
-        if (c != '\n'){
-            string[i] = c;
+    while ((c = fgetc(fptr)) != EOF) { // If each char is not the End Of Fike
+        if (c != '\n'){ 
+            string[i] = c; //stores the string at index i to the char
         }
         else{
-            string[i] = ' ';
+            string[i] = ' '; // Replace Newlines \n with just a space
         }
         i++;
     }
 
-    string[i] = '\0';
+    string[i] = '\0'; // Adds a ending to the string array
 
     fclose(fptr); // Close the file
 
@@ -83,19 +96,20 @@ int main(){
         }
     }
 
-    char search[12];
+    char search[12]; //Init search string to 12 chars
 
     while (1) {
 
-        int *arraysearch = malloc(sizeof(int)*MAX_SEARCH_RESULTS);
-        if (arraysearch == NULL) {
+        int *arraysearch = malloc(sizeof(int)*MAX_SEARCH_RESULTS); //Initizalizing the array to be dynamic
+        if (arraysearch == NULL) { //checks if memory is full
             printf("Memory allocation failed!\n");
             return 1;
         }
 
         printf("\n\nEnter a String to Search (Enter quit to close out the program): ");
         fgets(search, 12, stdin);
-        if (search == NULL) {
+
+        if (search[0] == '\0') { 
             printf("User Input Error, Goodbye!\n");
             free(arraysearch);
             break;
@@ -103,28 +117,28 @@ int main(){
 
         search[strcspn(search, "\n")] = '\0';  // Remove newline character
 
-        if (strlen(search) == 0) {
+        if (strlen(search) == 0) { // If user enters nothing, it will ask for them to re-enter seaerch
             printf("Invalid search string. Please enter a valid search term.\n");
             free(arraysearch);
             continue;
         }   
 
-        if (strcmp(search, "quit") == 0){
+        if (strcmp(search, "quit") == 0){ // Exit Program Condition
             free(arraysearch);
             break;  
         }
 
         i = 0;
-        char *stringcopy = string;
-        while ((stringcopy = strstr(stringcopy, search)) != NULL) {
-            arraysearch[i] = stringcopy - string;
-            i++;
-            stringcopy += strlen(search); //Moves the pointer past the word
+        char *stringptr = string; // Assigns pointer to the string
+        while ((stringptr = strstr(stringptr, search)) != NULL) { // Checks if pointer with strstr is not Null
+            arraysearch[i] = stringptr - string; //Gets the position
+            i++; // Increment
+            stringptr += strlen(search); //Moves the pointer past the found string
         }
     
-        if (strstr(string, search) != NULL){
+        if (i > 0){ // Checks the index if any position is found
             printf("Substring found at positions: ");
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < i; j++) { //Uses j to increment and print out the indexing of array
                 printf("%d ", arraysearch[j]);
             }
             printf("\n");
@@ -139,7 +153,7 @@ int main(){
 
     printf("\n\nThe time is now: %s", display_time);
     printf("\nThe number of seconds since the Great Epoch is %lu", current_time);
-    printf("\nThanks for using this Program. Comeback Next Time! Goodbye!\n\n\n");
+    printf("\nThanks for using this Program. Comeback Next Time! Goodbye!\n\n\n"); // Displaying a goodbye message
 
     free(string);
 
