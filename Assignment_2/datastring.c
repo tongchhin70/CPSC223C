@@ -58,30 +58,22 @@ int main(){
         printf("The file %s has loaded successfully!", filename);
     }
 
-    // Moving pointer to end
     fseek(fptr, 0, SEEK_END);
-    // Records the size 
     fsize = ftell(fptr);
-    // Moving it back to the start
-    fseek(fptr, 0, SEEK_SET); 
-
-    // Printing position of pointer
-    printf("\n\nThe file size has %ld chars\n", fsize);
-
-    string = malloc(sizeof(char)*(fsize+1)); // Using Malloc to allocate memory, + 1 to make room for NULL
-    int i = 0; // Init an Index
-
-    while ((c = fgetc(fptr)) != EOF) { // If each char is not the End Of Fike
-        if (c != '\n'){ 
-            string[i] = c; //stores the string at index i to the char
-        }
-        else{
-            string[i] = ' '; // Replace Newlines \n with just a space
+    fseek(fptr, 0, SEEK_SET);
+    
+    string = malloc(sizeof(char) * (fsize + 1)); // Allocate memory for the entire file
+    int i = 0;
+    
+    while ((c = fgetc(fptr)) != EOF) {
+        if (c != '\n') {
+            string[i] = c; // Store the character
+        } else {
+            string[i] = ' '; // Replace newline with space
         }
         i++;
     }
-
-    string[i] = '\0'; // Adds a ending to the string array
+    string[i] = '\0'; // Null-terminate the string
 
     fclose(fptr); // Close the file
 
@@ -91,14 +83,14 @@ int main(){
     printf("\nFile Contents to max of 256 char and 64 char per line:\n"); 
     for (i = 0; i < MAX_CHAR_SIZE; i++) {
         putchar(string[i]);
-        if ((i + 1) % MAX_CHAR_LINE == 0) { // Print 40 characters per row
-            printf("\n");
+        if ((i + 1) % MAX_CHAR_LINE == 0) { // Print 64 characters per row
+            printf("\n"); //Once the number hits 64, it will print a newline
         }
     }
 
     char search[12]; //Init search string to 12 chars
 
-    while (1) {
+    while (1) { // Creates a while to loop until a condition is met
 
         int *arraysearch = malloc(sizeof(int)*MAX_SEARCH_RESULTS); //Initizalizing the array to be dynamic
         if (arraysearch == NULL) { //checks if memory is full
@@ -106,7 +98,7 @@ int main(){
             return 1;
         }
 
-        printf("\n\nEnter a String to Search (Enter quit to close out the program): ");
+        printf("\n\nEnter a String to Search (Enter 'quit' to close out the program): ");
         fgets(search, 12, stdin);
 
         if (search[0] == '\0') { 
