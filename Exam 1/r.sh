@@ -10,8 +10,9 @@ echo "Remove un-needed files, if any exist."
 rm *.o
 rm *.out
 
-echo "Compile the C main function chemistry.c according to C standard of year 2020"
+echo "Compile the C main function linesort according to C standard of year 2020"
 gcc -c -Wall -std=c2x -o linesort.o -m64 -no-pie -fno-pie linesort.c
+
 
 if [ $? -ne 0 ]; then
     echo "Compilation failed."
@@ -19,7 +20,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Link object files"
-gcc -m64 -std=c2x linesort.o -fno-pie -no-pie -o runprogram.out
+gcc -m64 -std=c2x linesort.o  -fno-pie -no-pie -o runprogram.out
 
 if [ $? -ne 0 ]; then
     echo "Linking failed."
