@@ -1,4 +1,15 @@
+//Author: Tong Chhin
+//Author email: tongchhin@csu.fullerton.edu
+//Program name: Chemistry Program
+//Programming languages: One file in C language and two files in Bash.
+//Date program began: 2025-Feb-16
+//Date of last update: 2025-Feb-25
+//Files in this program: datastring and r.sh.  
+//Status: Ready to be submitted
 
+//Purpose of this program:
+// Purpose: This program reads a text file, stores its contents in memory, allows the user to search for a string,
+// and displays the occurrences of that string within the file.
 
 //============= Begin source code ===============
 #include <stdio.h>
@@ -7,6 +18,7 @@
 #include <time.h>
 #define MAX_CHAR_SIZE 256
 #define MAX_CHAR_LINE 64
+#define MAX_SEARCH_RESULTS 100
 
 int main(){
 
@@ -26,36 +38,25 @@ int main(){
     printf("\nThe time is now: %s\n", display_time);
 
     FILE* fptr; //init file
-    char *filename;//create file name 
+    char filename[30];//create file name 
     char *string;
     long fsize;
     char c;
 
-    //INTRO
-    // printf("\n*NOTE: CASE SENSITIVE AND ADD .txt AT THE END!*");
-    // printf("\nEnter the name of the text file: ");
-    // fgets(filename, 30, stdin);
-    // filename[strcspn(filename, "\n")] = 0; //removes new line by fgets
+    printf("\n*NOTE: CASE SENSITIVE AND ADD .txt AT THE END!*");
+    printf("\nEnter the name of the text file: ");
+    fgets(filename, 30, stdin);
+    filename[strcspn(filename, "\n")] = 0; //removes new line by fgets
 
 
-    // fptr = fopen(filename, "r");
+    fptr = fopen(filename, "r");
 
-    // if (fptr == NULL){
-    //     printf("The file does not exist. The program will now exit.");
-    //     exit(0);
-    // }else {
-    //     printf("The file has loaded successfully!");
-    // }
-
-    //TESTCASE
-    fptr = fopen("text.txt", "r");
     if (fptr == NULL){
         printf("The file does not exist. The program will now exit.");
-        exit(0);
+        return 1;
     }else {
-        printf("The file has loaded successfully!");
+        printf("The file %s has loaded successfully!", filename);
     }
-
 
     // Moving pointer to end
     fseek(fptr, 0, SEEK_END);
@@ -70,70 +71,74 @@ int main(){
     string = malloc(sizeof(char)*(fsize+1)); // Using Malloc to allocate memory, + 1 to make room for NULL
     int i = 0; // Init an Index
 
-    while ((c = fgetc(fptr)) != EOF) {
-        string[i] = c; // Adds a char to into string array
-        i++; // Moves the index to the next char
+    while ((c = fgetc(fptr)) != EOF) { // If each char is not the End Of Fike
+        if (c != '\n'){ 
+            string[i] = c; //stores the string at index i to the char
+        }
+        else{
+            string[i] = ' '; // Replace Newlines \n with just a space
+        }
+        i++;
     }
 
-    string[i] = '\0'; // Add NULL to the end of the string array
-    fclose(fptr); // Close the file
+    string[i] = '\0'; // Adds a ending to the string array
 
-    free(fptr); // Free up memory
+    fclose(fptr); // Close the file
 
     printf("\nFile has copied to a one-dimensional array.\n"); // Finished copying the contents
 
-    // printf("\nFile Contents:\n\n%s\n", string);
-
     // Print 256 characters
-    printf("\nFile Contents to max of 256 characters:\n");
-    i = 0; // Index starting at 0
-
-    while (i != MAX_CHAR_SIZE ){ // Adds a while loop to restrict char to loop 256 times
-        if (i % 64 != 0){ // Condition with modulo to add a new line for every 64 char
-            printf("%c", string[i]);
-            i++; // Increment 
-        } else {
-            printf("\n"); // New line added
-            printf("%c", string[i]);
-            i++; // Increment 
+    printf("\nFile Contents to max of 256 char and 64 char per line:\n"); 
+    for (i = 0; i < MAX_CHAR_SIZE; i++) {
+        putchar(string[i]);
+        if ((i + 1) % MAX_CHAR_LINE == 0) { // Print 40 characters per row
+            printf("\n");
         }
     }
 
-
-    char *search = malloc(sizeof(char)* 12);
-    char *result;
-    char *stringcopy = string;
-
-    if (search == NULL) {
-        printf("Memory allocation failed!\n");
-        return 1;
-    }
+    char search[12]; //Init search string to 12 chars
 
     while (1) {
 
-        i = 0;
-        int *arraysearch = malloc(sizeof(int)*10);
-        char *result;
-        char *stringcopy = string;
+        int *arraysearch = malloc(sizeof(int)*MAX_SEARCH_RESULTS); //Initizalizing the array to be dynamic
+        if (arraysearch == NULL) { //checks if memory is full
+            printf("Memory allocation failed!\n");
+            return 1;
+        }
 
         printf("\n\nEnter a String to Search (Enter quit to close out the program): ");
         fgets(search, 12, stdin);
+
+        if (search[0] == '\0') { 
+            printf("User Input Error, Goodbye!\n");
+            free(arraysearch);
+            break;
+        }
+
         search[strcspn(search, "\n")] = '\0';  // Remove newline character
 
-        if (strcmp(search, "quit") == 0){
-            printf("Goodbye!\n");
-            break;  // Exit the loop
+        if (strlen(search) == 0) { // If user enters nothing, it will ask for them to re-enter seaerch
+            printf("Invalid search string. Please enter a valid search term.\n");
+            free(arraysearch);
+            continue;
+        }   
+
+        if (strcmp(search, "quit") == 0){ // Exit Program Condition
+            free(arraysearch);
+            break;  
         }
 
-        while ((result = strstr(stringcopy, search)) != NULL){
-            stringcopy = result + strlen(search);
-            arraysearch[i] = result - string;
-            i++;
+        i = 0;
+        char *stringptr = string; // Assigns pointer to the string
+        while ((stringptr = strstr(stringptr, search)) != NULL) { // Checks if pointer with strstr is not Null
+            arraysearch[i] = stringptr - string; //Gets the position
+            i++; // Increment
+            stringptr += strlen(search); //Moves the pointer past the found string
         }
     
-        if (strstr(string, search) != NULL){
+        if (i > 0){ // Checks the index if any position is found
             printf("Substring found at positions: ");
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < i; j++) { //Uses j to increment and print out the indexing of array
                 printf("%d ", arraysearch[j]);
             }
             printf("\n");
@@ -146,15 +151,11 @@ int main(){
         free(arraysearch);
     }
 
-    free(search);
+    printf("\n\nThe time is now: %s", display_time);
+    printf("\nThe number of seconds since the Great Epoch is %lu", current_time);
+    printf("\nThanks for using this Program. Comeback Next Time! Goodbye!\n\n\n"); // Displaying a goodbye message
 
-    // printf("Substring found at positions: ");
-    // for (int j = 0; j < i; j++) {
-    //     printf("%d ", arraysearch[j]);
-    // }
-    // printf("\n");
-
-
+    free(string);
 
     return 0;
 }
