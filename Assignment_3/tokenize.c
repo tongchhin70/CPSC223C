@@ -1,78 +1,111 @@
-//Author: Tong Chhin
-//Author email: tongchhin@csu.fullerton.edu
-//Program name: Chemistry Program
-//Programming languages: One file in C language and two files in Bash.
-//Date program began: 2025-Feb-16
-//Date of last update: 2025-Feb-25
-//Files in this program: datastring and r.sh.  
-//Status: Ready to be submitted
+// Author: Tong Chhin
+// Author email: tongchhin@csu.fullerton.edu
+// Program name: Tokenizer Program
+// Programming languages: Three files in C language and one file in Bash.
+// Date program began: 2025-Mar-2
+// Date last updated: 2025-Mar-13
+// Program purpose: This program reads text data from a file into a dynamically allocated array,
+// prompts the user for separator characters, tokenizes the input text into substrings (tokens)
+// based on those separators, and clearly displays each token along with the total token count.
 
-//Purpose of this program:
-// Purpose: This program reads a text file, stores its contents in memory, allows the user to search for a string,
-// and displays the occurrences of that string within the file.
 
 //============= Begin source code ===============
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#define MAX_CHAR_SIZE 1024
-#define MAX_STRING_LINE 100
+#include <ctype.h>
+#include "file2string2.h"
+#define MAX_CHAR_SIZE 256
+#define MAX_TOKEN 100
 
-void print_array(char *arr[], int n);
-
-int main(){
-
-    //Gets Current Time
-    time_t current_time;
-    current_time = time(NULL);
-    struct tm *local_time;
-    //converts current to local
-
-    time(&current_time);
-    local_time = localtime(&current_time);
-    // Format the date and time
-    char display_time[100];
-    strftime(display_time, sizeof(display_time), "%Y %B %d @ %I:%M%p", local_time);
-
-    printf("\nWelcome to Data String brought to by Chief Software Engineer Tong Chhin");
-    printf("\nThe time is now: %s\n", display_time);
-
-    FILE* file ; //init file
-    char filename[30];//create file name 
-    char *string;
-    char buffer[MAX_CHAR_SIZE];
-    char *stringArray[MAX_STRING_LINE];
-    char c;
-
-    printf("\n*NOTE: CASE SENSITIVE AND ADD .txt AT THE END!*");
-    printf("\nEnter the name of the text file: ");
-    fgets(filename, 30, stdin);
-    filename[strcspn(filename, "\n")] = 0; //removes new line by fgets
-
-
-    file  = fopen(filename, "r");
-
-    if (file  == NULL){
-        printf("The file does not exist. The program will now exit.");
-        return 1;
-    }else {
-        printf("The file %s has loaded successfully!", filename);
+char* whitespaceremover(char* str){
+    while (isspace((unsigned char)*str)) {
+        str++;  // Advance pointer until non-whitespace char
     }
+    return str; // Return new position clearly
+}
 
-    int count = 0;
-    while (fgets(buffer, MAX_CHAR_SIZE, file) && count < MAX_STRING_LINE) {
-        size_t length = strlen(buffer);
-        stringArray[count] = malloc(length + 1);
+int tokenize(char *str, const char *separators, char Token_arr[MAX_TOKEN][MAX_CHAR_SIZE]) {
+    int count = 0; // Init count
 
-        strcpy(stringArray[count], buffer); // Copy buffer to allocated memory
+    printf("Confirmation: These are the separators =>%s\n", separators); // Outputs the seperator
+    printf("Here is the complete list of tokens:\n");
+
+    str = whitespaceremover(str); //Removes any whitespaces at the front the string
+
+    char *token = strtok(str, separators); // Starts the first Token
+
+    while (token!=NULL){
+
+        token = whitespaceremover(token);// Token Does not have a trailing whitespace
+
+        strncpy(Token_arr[count], token, MAX_TOKEN - 1); // COPY TOKEN INTO THE INDEX OF I
+        Token_arr[count][MAX_TOKEN - 1] = '\0'; // ADDS NULL AFTER TOKEN
+
+        token = strtok(NULL, separators); // Starts token process again
         count++;
     }
 
-    fclose(file); // Close the file
-
-    printf("\nFile has copied to a one-dimensional array.\n"); // Finished copying the contents
-    print_array(stringArray, count);
-    
+    return count;
 }
-    
+
+void print_token(char Token_arr[MAX_TOKEN][MAX_CHAR_SIZE], int count){
+    for (int i = 0; i < count; i++){
+        printf("TOKEN %d: %s\n", i, Token_arr[i]);
+    }
+
+    printf("Total Token: %d", count);
+}
+
+void print_content(char arr[], int size){
+    printf("%d characters were read from the file into an array of the program.\n", size);
+
+    for(int i = 0; i < size; i++){
+        printf("%c", arr[i]); //  print char per char
+    }
+    printf("\n");
+}
+
+int main() {
+    char filename[MAX_CHAR_SIZE];
+    char separators[MAX_CHAR_SIZE];
+    char *fileContent = NULL;
+
+    //2D Array
+    char token[MAX_TOKEN][MAX_CHAR_SIZE];
+    int count;
+
+    while (1) {
+        printf("Enter filename: ");
+        if (fgets(filename, sizeof(filename), stdin) == NULL) {
+            printf("\nExiting Program, Thank you and Goodbye!\n");
+            exit(0);
+        }
+        filename[strcspn(filename, "\n")] = 0; //removes new line by fgets
+
+        fileContent = file2string(filename);
+
+        if (fileContent != NULL) {
+            break; // successfully opened file
+        } else {
+            printf("Invalid file name, please try again.\n");
+        }
+    }
+
+    int length = strlen(fileContent); // Gets the size
+    print_content(fileContent, length); // Calls the print function
+
+    printf("Enter the separator characters which may include white space and press enter: ");
+    fgets(separators, sizeof(separators), stdin);
+    separators[strcspn(separators, "\n")] = '\0'; // The trailing newline at the end of the input
+
+    count = tokenize(fileContent, separators, token); // Calls the Tokenization Function, stores count
+
+    print_token(token, count);
+
+
+
+    free(fileContent);
+    printf("\nHave a nice evening.\n\n");
+    return 0;
+}
