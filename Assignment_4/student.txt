@@ -1,0 +1,74 @@
+Alice Johnson
+12345678
+Computer Science
+Freshman
+2
+CS50
+MATH101
+1234567890
+150.75
+Bob Smith
+23456789
+Mechanical Engineering
+Sophomore
+3
+ME201
+PHYS150
+MATH250
+1987654321
+200.00
+Charlie Nguyen
+34567890
+Business Administration
+Junior
+1
+BUS101
+1122334455
+100.25
+Diana Lee
+45678901
+Biology
+Senior
+4
+BIO101
+CHEM102
+PHYS103
+ENG104
+1223344556
+180.50
+Ethan Kim
+56789012
+Electrical Engineering
+Freshman
+2
+EE100
+MATH150
+1333444555
+220.10
+Fiona Martinez
+67890123
+Psychology
+Sophomore
+3
+PSY101
+SOC102
+ENG201
+1444555666
+90.00
+George Brown
+78901234
+Computer Science
+Junior
+1
+CS201
+1555666777
+165.80
+Hannah Davis
+89012345
+Art History
+Senior
+2
+ART101
+HIST202
+1666777888
+75.00

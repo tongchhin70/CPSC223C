@@ -1,0 +1,27 @@
+Andy
+1233
+Compsci
+Junior
+1
+CPSC 232
+5621233333
+0.00
+Tong
+9090
+Biology
+Freshman
+2
+BIO101
+BIO121
+5622738989
+330.00
+Nit
+1231
+Philosophy
+Sophomore
+3
+PHIL 101
+PHIL 102
+PHIL 103
+7135098383
+312.20
